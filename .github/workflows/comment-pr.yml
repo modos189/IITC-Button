@@ -1,4 +1,4 @@
-name: add artifact links to pull request and related issues
+name: Add artifact links to pull request
 on:
   workflow_run:
     workflows: ['Build IITC Button']
@@ -13,12 +13,28 @@ jobs:
     if: ${{ github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: add artifact links to pull request and related issues step
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Get artifact url'
+        uses: actions/github-script@v6
         with:
-          prefix: Here are the build results
-          suffix: Artifacts will only be retained for 90 days.
-          format: name
-          addTo: pullandissues
+         script: |
+           let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+           });
+           let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+             return artifact.name == "build"
+           })[0];
+           console.log(matchArtifact);
+           core.exportVariable('ARTIFACT_URL', matchArtifact.url);
+
+      - name: Comment with build url for PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr_release
+          number: ${{ env.PR_NUMBER }}
+          message: |
+            ## 🤖 Pull request artifacts
+            | file | commit |
+            | ---- | ------ |
+            | [`build.zip`](${{ env.ARTIFACT_URL }}) | commit |
