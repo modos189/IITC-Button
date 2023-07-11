@@ -36,7 +36,7 @@ jobs:
         uses: polyseam/get-version-key-from-json@v1.0.0
         id: get-version-key-from-json
         with:
-          path-to-package-json: './package.json'
+          path-to-json: './package.json'
 
       - name: Save metadata
         run: |
