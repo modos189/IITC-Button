@@ -33,7 +33,7 @@ jobs:
 
       - name: Get version from package.json
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: polyseam/get-version-key-from-json@1.0.0
+        uses: polyseam/get-version-key-from-json@v1.0.0
         id: get-version-key-from-json
         with:
           path-to-package-json: './package.json'
