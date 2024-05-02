@@ -25,7 +25,8 @@ jobs:
             artifacts.data.artifacts.forEach((artifact, index) => {
               const nameVar = `artifact${index + 1}`;
               const urlVar = `url${index + 1}`;
-              core.exportVariable(nameVar, artifact.name);
+              let displayName = artifact.name.endsWith('-artifacts') ? `**${artifact.name}**` : artifact.name;
+              core.exportVariable(nameVar, displayName);
               core.exportVariable(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}/artifacts/${artifact.id}`);
             });
 
