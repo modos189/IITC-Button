@@ -28,7 +28,8 @@ jobs:
               table += `| ${artifact.name} | [Download](${downloadURL}) |\n`;
             }
             const message = "Build completed successfully. Below are the download links for the build artifacts:\n"+table+"\nArtifacts will only be retained for 90 days.";
-            return table;
+            console.log(message);
+            return message;
 
       - name: Comment with artifact links for PR
         uses: marocchino/sticky-pull-request-comment@v2
