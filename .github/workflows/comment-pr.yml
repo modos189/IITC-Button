@@ -25,10 +25,8 @@ jobs:
             artifacts.data.artifacts.forEach((artifact, index) => {
               const nameVar = `artifact${index + 1}`;
               const urlVar = `url${index + 1}`;
-              core.setOutput(nameVar, artifact.name);
-              core.setOutput(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`);
               core.exportVariable(nameVar, artifact.name);
-              core.exportVariable(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`);
+              core.exportVariable(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}/artifacts/${artifact.id}`);
             });
 
       - name: Comment with artifact links for PR
