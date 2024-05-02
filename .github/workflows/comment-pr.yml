@@ -27,6 +27,7 @@ jobs:
               const downloadURL = `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`;
               table += `| ${artifact.name} | [Download](${downloadURL}) |\n`;
             }
+            const message = "Build completed successfully. Below are the download links for the build artifacts:\n"+table+"\nArtifacts will only be retained for 90 days.";
             return table;
 
       - name: Comment with artifact links for PR
@@ -34,7 +35,4 @@ jobs:
         with:
           header: pr_artifacts
           number: ${{ github.event.workflow_run.pull_requests[0].number }}
-          message: |
-            Build completed successfully. Below are the download links for the build artifacts:
-            ${{ steps.get-artifacts.outputs.result }}
-            Artifacts will only be retained for 90 days.
+          message: ${{ steps.get-artifacts.outputs.result }}
