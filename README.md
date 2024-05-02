@@ -81,4 +81,3 @@ To develop without a certificate, tell Safari to load unsigned extensions using 
    * Select the Extensions tab. This tab shows the localized description, display name, and version number for the selected Safari App Extension. It also provides more information about the permissions claimed by the extension.
    * Find your new extension in the list on the left, and enable it by selecting the checkbox.
 
-
