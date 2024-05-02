@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Get artifact list from API
         id: get-artifacts
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -22,18 +22,29 @@ jobs:
               repo: context.repo.repo,
               run_id: runId
             });
-            let table = "| Artifact Name | Download Link |\n| ------------- | ------------- |\n";
-            for (const artifact of artifacts.data.artifacts) {
-              const downloadURL = `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`;
-              table += `| ${artifact.name} | [Download](${downloadURL}) |\n`;
-            }
-            const message = "Build completed successfully. Below are the download links for the build artifacts:\n"+table+"\nArtifacts will only be retained for 90 days.";
-            console.log(message);
-            return message;
+            artifacts.data.artifacts.forEach((artifact, index) => {
+              const nameVar = `artifact${index + 1}`;
+              const urlVar = `url${index + 1}`;
+              core.setOutput(nameVar, artifact.name);
+              core.setOutput(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`);
+              core.exportVariable(nameVar, artifact.name);
+              core.exportVariable(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/suites/${runId}/artifacts/${artifact.id}`);
+            });
 
       - name: Comment with artifact links for PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr_artifacts
           number: ${{ github.event.workflow_run.pull_requests[0].number }}
-          message: ${{ steps.get-artifacts.outputs.result }}
+          message: |
+            Build completed successfully. Below are the download links for the build artifacts:
+            
+            | Artifact Name | Download Link |
+            | ------------- | ------------- |
+            | ${{ env.artifact1 }} | [Download](${{ env.url1 }}) |
+            | ${{ env.artifact2 }} | [Download](${{ env.url2 }}) |
+            | ${{ env.artifact3 }} | [Download](${{ env.url3 }}) |
+            | ${{ env.artifact4 }} | [Download](${{ env.url4 }}) |
+            | ${{ env.artifact5 }} | [Download](${{ env.url5 }}) |
+            
+            Artifacts will only be retained for 90 days.
