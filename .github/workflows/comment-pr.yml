@@ -30,11 +30,24 @@ jobs:
               core.exportVariable(urlVar, `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}/artifacts/${artifact.id}`);
             });
 
+      - name: Download and extract first artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.get-artifacts.outputs.artifact1 }}
+
+      - name: Extract PR number from artifact
+        run: |
+          if [ -f "build/.metadata/pr_number" ]; then
+            PR_NUMBER=$(cat build/.metadata/pr_number)
+            echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          fi
+
       - name: Comment with artifact links for PR
         uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ env.PR_NUMBER != '' }}
         with:
           header: pr_artifacts
-          number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          number: ${{ env.PR_NUMBER }}
           message: |
             Build completed successfully. Below are the download links for the build artifacts:
             
