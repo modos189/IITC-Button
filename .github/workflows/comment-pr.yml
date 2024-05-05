@@ -55,6 +55,18 @@ jobs:
             echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
           fi
 
+      - name: Download and extract first artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.artifact1 }}
+
+      - name: Extract PR number from artifact
+        run: |
+          if [ -f "build/.metadata/pr_number" ]; then
+            PR_NUMBER=$(cat build/.metadata/pr_number)
+            echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          fi
+
       - name: Comment with artifact links for PR
         uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ env.PR_NUMBER != '' }}
