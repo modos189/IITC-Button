@@ -134,4 +134,4 @@ jobs:
           FIREFOX_SOURCES_ZIP: "sources.zip"
           DRY_RUN: true
         run: |
-          publish-extension
+          npx publish-extension
