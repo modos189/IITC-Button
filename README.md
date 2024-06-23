@@ -1,4 +1,4 @@
-IITC Button WebExtension
+IITC Button WebExtension BETA
 ========================
 
 [![Firefox Add-ons](https://img.shields.io/amo/v/iitc-button.svg?style=flat-square)](https://addons.mozilla.org/firefox/addon/iitc-button)[![Firefox Add-ons](https://img.shields.io/amo/users/iitc-button.svg?style=flat-square)](https://addons.mozilla.org/firefox/addon/iitc-button)
