@@ -104,11 +104,11 @@ jobs:
         if: ${{ contains(fromJSON('["release", "beta"]'), env.BUILD_TYPE) }}
         run: |
           if [ "$BUILD_TYPE" == "release" ]; then
-            echo "CHROME_EXTENSION_ID=${{ env.CHROME_EXTENSION_ID_RELEASE }}" >> $GITHUB_ENV
-            echo "FIREFOX_EXTENSION_ID=${{ env.FIREFOX_EXTENSION_ID_RELEASE }}" >> $GITHUB_ENV
+            echo "CHROME_EXTENSION_ID=${{ vars.CHROME_EXTENSION_ID_RELEASE }}" >> $GITHUB_ENV
+            echo "FIREFOX_EXTENSION_ID=${{ vars.FIREFOX_EXTENSION_ID_RELEASE }}" >> $GITHUB_ENV
           elif [ "$BUILD_TYPE" == "beta" ]; then
-            echo "CHROME_EXTENSION_ID=${{ env.CHROME_EXTENSION_ID_BETA }}" >> $GITHUB_ENV
-            echo "FIREFOX_EXTENSION_ID=${{ env.FIREFOX_EXTENSION_ID_BETA }}" >> $GITHUB_ENV
+            echo "CHROME_EXTENSION_ID=${{ vars.CHROME_EXTENSION_ID_BETA }}" >> $GITHUB_ENV
+            echo "FIREFOX_EXTENSION_ID=${{ vars.FIREFOX_EXTENSION_ID_BETA }}" >> $GITHUB_ENV
           fi
           echo "CHROME_ZIP=./build-chrome/${{ env.chromeArtifactName }}.zip" >> $GITHUB_ENV
           echo "FIREFOX_ZIP=./build-firefox/${{ env.firefoxArtifactName }}.zip" >> $GITHUB_ENV
