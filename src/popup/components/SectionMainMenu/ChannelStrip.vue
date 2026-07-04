@@ -1,15 +1,17 @@
 <!-- @license Copyright (C) IITC-CE - GPL-3.0 with Store Exception - see LICENSE and COPYING.STORE -->
 <template>
-  <div class="channel">
-    <button
-      class="channel__pill"
-      :class="{ open: open }"
-      :title="t('popupSelectedChannel', channelLabel)"
-      v-on:click="toggle"
-    >
-      <span class="channel__name">{{ channelLabel }}</span>
-      <i class="material-icons channel__chevron">expand_more</i>
-    </button>
+  <div class="channel" :class="{ 'channel--collapsed': collapsed }">
+    <div class="channel__collapse">
+      <button
+        class="channel__pill"
+        :class="{ open: open }"
+        :title="t('popupSelectedChannel', channelLabel)"
+        v-on:click="toggle"
+      >
+        <span class="channel__name">{{ channelLabel }}</span>
+        <i class="material-icons channel__chevron">expand_more</i>
+      </button>
+    </div>
     <div class="channel__menu" v-if="open">
       <button
         v-for="opt in channelOptions"
@@ -33,6 +35,12 @@ import { mixin } from "../mixins";
 
 export default defineComponent({
   name: "ChannelStrip",
+  props: {
+    collapsed: {
+      type: Boolean,
+      default: false,
+    },
+  },
   mixins: [mixin],
   data() {
     return {
@@ -94,11 +102,31 @@ export default defineComponent({
 .channel {
   position: relative;
   flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-right: 8px;
+  transition:
+    grid-template-columns 0.25s ease-out,
+    opacity 0.2s ease-out,
+    margin-right 0.25s ease-out;
+}
+.channel--collapsed {
+  grid-template-columns: 0fr;
+  margin-right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+/* Clipping the bare wrapper (not the pill) lets the track reach 0: the button's
+   padding/border keep its min-size above 0, which overflow:hidden cannot zero */
+.channel__collapse {
+  display: flex;
+  overflow: hidden;
 }
 .channel__pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
   height: 34px;
   padding: 0 8px 0 11px;
   border: 1px solid var(--outline);
