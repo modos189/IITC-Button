@@ -3,7 +3,7 @@
   <div class="menu">
     <Title></Title>
     <div class="toolbar">
-      <ChannelStrip></ChannelStrip>
+      <ChannelStrip :collapsed="!!search_query"></ChannelStrip>
       <SearchBar v-model="search_query"></SearchBar>
     </div>
     <Tags :categories="categories" :all_plugins="plugins_flat"></Tags>
@@ -159,7 +159,6 @@ export default defineComponent({
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-shrink: 0;
   padding: 10px 12px 4px;
 }

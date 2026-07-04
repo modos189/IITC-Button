@@ -4,6 +4,7 @@
     <div class="search__box">
       <i class="material-icons search__icon">search</i>
       <input
+        ref="input"
         class="search__input"
         type="text"
         v-bind:placeholder="t('searchBoxPlaceholder')"
@@ -40,8 +41,22 @@ export default defineComponent({
     onInput(e: Event) {
       this.$emit("update:modelValue", (e.target as HTMLInputElement).value);
     },
+    focusInput() {
+      (this.$refs.input as HTMLInputElement).focus({ preventScroll: true });
+    },
   },
   mixins: [mixin],
+  mounted() {
+    // Firefox popups lack document focus at mount, silently dropping
+    // focus() - retry once the popup window actually gains focus
+    this.focusInput();
+    if (!document.hasFocus()) {
+      window.addEventListener("focus", this.focusInput, { once: true });
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener("focus", this.focusInput);
+  },
 });
 </script>
 
