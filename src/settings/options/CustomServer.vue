@@ -41,12 +41,14 @@ import browser from "webextension-polyfill";
 import { validateCustomChannelUrl } from "lib-iitc-manager";
 import { t } from "@/i18n";
 
+const DEFAULT_CUSTOM_HOST = "http://localhost:8000";
+
 export default defineComponent({
   name: "CustomServer",
   data() {
     return {
       status: "error",
-      host: "http://localhost:8000",
+      host: DEFAULT_CUSTOM_HOST,
     };
   },
   methods: {
@@ -60,7 +62,7 @@ export default defineComponent({
     async changeCustomServer() {
       let connected = await this.setInputStatus(this.host);
 
-      if (!connected && !this.host.startsWith("http")) {
+      if (!connected && this.host && !this.host.startsWith("http")) {
         const http_host = "http://" + this.host;
         if (await this.setInputStatus(http_host)) {
           connected = true;
@@ -68,11 +70,13 @@ export default defineComponent({
         }
       }
 
+      await browser.runtime.sendMessage({
+        type: "setCustomChannelUrl",
+        value: this.host || DEFAULT_CUSTOM_HOST,
+      });
+
       if (connected) {
-        await browser.runtime.sendMessage({
-          type: "setCustomChannelUrl",
-          value: this.host,
-        });
+        await browser.runtime.sendMessage({ type: "forceFullUpdate" });
       }
     },
     setExample(host: string) {
