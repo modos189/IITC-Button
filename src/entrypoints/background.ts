@@ -78,7 +78,9 @@ export default defineBackground(() => {
     isDaemon: true,
   });
 
-  manager.run().then();
+  manager.run().catch((error) => {
+    console.error("IITC Button: manager startup failed", error);
+  });
 
   if (IS_SCRIPTING_API) {
     const { onUpdated, onRemoved } = browser.tabs;
