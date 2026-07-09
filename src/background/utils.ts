@@ -15,7 +15,12 @@ export async function getTabsToInject() {
 // Filter all completly loaded Ingress Intel tabs
 export async function getNiaTabsToInject(plugin: Plugin) {
   const tabs = await getTabsToInject();
+  // Fallback to the intel origin when match/include is empty
+  const target =
+    plugin.match || plugin.include
+      ? plugin
+      : { ...plugin, match: ["https://intel.ingress.com/*"] };
   return Object.values(tabs).filter(
-    (tab) => tab.url && checkMatching(plugin, tab.url),
+    (tab) => tab.url && checkMatching(target, tab.url),
   );
 }
